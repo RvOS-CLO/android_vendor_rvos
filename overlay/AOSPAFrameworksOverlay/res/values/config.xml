@@ -79,17 +79,8 @@
     <!--  Maximum number of supported users -->
     <integer name="config_multiuserMaximumUsers">8</integer>
 
-     <!-- Build properties from a GMS certified device against current platform SPL level -->
-     <string-array name="config_certifiedBuildProperties" translatable="false">
-        <item>komodo</item>   <!-- Build.DEVICE -->
-        <item>komodo_beta</item>   <!-- Build.PRODUCT -->
-        <item>Pixel 9 Pro XL</item> <!-- Build.MODEL -->
-        <item>google/komodo_beta/komodo:15/AP41.240925.009/12534705:user/release-keys</item> <!-- Build.FINGERPRINT -->
-     </string-array>
-
     <!-- Colon separated list of package names that should be granted Notification Listener access -->
     <string name="config_defaultListenerAccessPackages" translatable="false">com.google.android.apps.nexuslauncher:com.google.android.setupwizard:com.google.android.apps.pixelmigrate:com.google.android.as:com.google.android.projection.gearhead:com.android.launcher3:co.aospa.glyph</string>
-
 
     <!-- Name of the font family to use in the default lockscreen clock -->
     <string name="config_clockFontFamily" translatable="false">google-sans-clock</string>
