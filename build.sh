@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AOSPA build helper script
+# RvOS build helper script
 
 # red = errors, cyan = warnings, green = confirmations, blue = informational
 # plain for generic text, bold for titles, reset flag at each end of line
@@ -36,7 +36,7 @@ function showHelpAndExit {
         echo -e "${CLR_BLD_BLU}  -c, --clean           Wipe the tree before building${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -i, --installclean    Dirty build - Use 'installclean'${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -r, --repo-sync       Sync before building${CLR_RST}"
-        echo -e "${CLR_BLD_BLU}  -v, --variant         AOSPA variant - Can be alpha, beta or release${CLR_RST}"
+        echo -e "${CLR_BLD_BLU}  -v, --variant         RvOS variant - Can be alpha, beta or release${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -t, --build-type      Specify build type${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -j, --jobs            Specify jobs/threads to use${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -m, --module          Build a specific module${CLR_RST}"
@@ -63,7 +63,7 @@ while true; do
         -c|--clean|c|clean) FLAG_CLEAN_BUILD=y;;
         -i|--installclean|i|installclean) FLAG_INSTALLCLEAN_BUILD=y;;
         -r|--repo-sync|r|repo-sync) FLAG_SYNC=y;;
-        -v|--variant|v|variant) AOSPA_VARIANT="$2"; shift;;
+        -v|--variant|v|variant) RVOS_VARIANT="$2"; shift;;
         -t|--build-type|t|build-type) BUILD_TYPE="$2"; shift;;
         -j|--jobs|j|jobs) JOBS="$2"; shift;;
         -m|--module|m|module) MODULES+=("$2"); echo $2; shift;;
@@ -72,7 +72,7 @@ while true; do
         -b|--backup-unsigned|b|backup-unsigned) FLAG_BACKUP_UNSIGNED=y;;
         -d|--delta|d|delta) DELTA_TARGET_FILES="$2"; shift;;
         -z|--imgzip|img|imgzip) FLAG_IMG_ZIP=y;;
-        -n|--version|n|version) AOSPA_USER_VERSION="$2"; shift;;
+        -n|--version|n|version) RVOS_USER_VERSION="$2"; shift;;
         --) shift; break;;
     esac
     shift
@@ -102,28 +102,28 @@ if [ ! -d "$DIR_ROOT/vendor/aospa" ]; then
         exit 1
 fi
 
-# Setup AOSPA variant if specified
-if [ $AOSPA_VARIANT ]; then
-    AOSPA_VARIANT=`echo $AOSPA_VARIANT |  tr "[:upper:]" "[:lower:]"`
-    if [ "${AOSPA_VARIANT}" = "release" ]; then
-        export AOSPA_BUILDTYPE=RELEASE
-    elif [ "${AOSPA_VARIANT}" = "beta" ]; then
-        export AOSPA_BUILDTYPE=BETA
-    elif [ "${AOSPA_VARIANT}" = "alpha" ]; then
-        export AOSPA_BUILDTYPE=ALPHA
+# Setup RvOS variant if specified
+if [ $RVOS_VARIANT ]; then
+    RVOS_VARIANT=`echo $RVOS_VARIANT |  tr "[:upper:]" "[:lower:]"`
+    if [ "${RVOS_VARIANT}" = "release" ]; then
+        export RVOS_BUILDTYPE=RELEASE
+    elif [ "${RVOS_VARIANT}" = "beta" ]; then
+        export RVOS_BUILDTYPE=BETA
+    elif [ "${RVOS_VARIANT}" = "alpha" ]; then
+        export RVOS_BUILDTYPE=ALPHA
     else
-        echo -e "${CLR_BLD_RED} Unknown AOSPA variant - use beta or release${CLR_RST}"
+        echo -e "${CLR_BLD_RED} Unknown RvOS variant - use beta or release${CLR_RST}"
         exit 1
     fi
 fi
 
-# Setup AOSPA version if specified
-if [ $AOSPA_USER_VERSION ]; then
+# Setup RvOS version if specified
+if [ $RVOS_USER_VERSION ]; then
     # Check if it is a number
-    if [[ $AOSPA_USER_VERSION =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-        export AOSPA_BUILDVERSION=$AOSPA_USER_VERSION
+    if [[ $RVOS_USER_VERSION =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+        export RVOS_BUILDVERSION=$RVOS_USER_VERSION
     else
-        echo -e "${CLR_BLD_RED}Invalid AOSPA version - use any non-negative number${CLR_RST}"
+        echo -e "${CLR_BLD_RED}Invalid RvOS version - use any non-negative number${CLR_RST}"
         exit 1
     fi
 fi
@@ -150,11 +150,11 @@ if [ -z "$JOBS" ]; then
 fi
 
 # Grab the build version
-AOSPA_DISPLAY_VERSION="$(cat $DIR_ROOT/vendor/aospa/target/product/version.mk | grep 'AOSPA_MAJOR_VERSION := *' | sed 's/.*= //') "
-if [ $AOSPA_BUILDVERSION ]; then
-    AOSPA_DISPLAY_VERSION+="$AOSPA_BUILDVERSION"
+RVOS_DISPLAY_VERSION="$(cat $DIR_ROOT/vendor/aospa/target/product/version.mk | grep 'RVOS_MAJOR_VERSION := *' | sed 's/.*= //') "
+if [ $RVOS_BUILDVERSION ]; then
+    RVOS_DISPLAY_VERSION+="$RVOS_BUILDVERSION"
 else
-    AOSPA_DISPLAY_VERSION+="$(cat $DIR_ROOT/vendor/aospa/target/product/version.mk | grep 'AOSPA_MINOR_VERSION := *' | tail -n 1 | sed 's/.*= //')"
+    RVOS_DISPLAY_VERSION+="$(cat $DIR_ROOT/vendor/aospa/target/product/version.mk | grep 'RVOS_MINOR_VERSION := *' | tail -n 1 | sed 's/.*= //')"
 fi
 
 # Prep for a clean build, if requested so
@@ -175,15 +175,15 @@ fi
 TIME_START=$(date +%s.%N)
 
 # Friendly logging to tell the user everything is working fine is always nice
-echo -e "${CLR_BLD_GRN}Building AOSPA $AOSPA_DISPLAY_VERSION for $DEVICE${CLR_RST}"
+echo -e "${CLR_BLD_GRN}Building RvOS $RVOS_DISPLAY_VERSION for $DEVICE${CLR_RST}"
 echo -e "${CLR_GRN}Start time: $(date)${CLR_RST}"
 echo -e ""
 
 # Lunch-time!
 echo -e "${CLR_BLD_BLU}Lunching $DEVICE${CLR_RST} ${CLR_CYA}(Including dependencies sync)${CLR_RST}"
 echo -e ""
-lunch "aospa_$DEVICE-$BUILD_TYPE"
-AOSPA_VERSION="$(get_build_var AOSPA_VERSION)"
+lunch "rvos_$DEVICE-$BUILD_TYPE"
+RVOS_VERSION="$(get_build_var RVOS_VERSION)"
 checkExit
 echo -e ""
 
@@ -224,16 +224,16 @@ elif [ "${KEY_MAPPINGS}" ]; then
 
     echo -e "${CLR_BLD_BLU}Signing target files apks${CLR_RST}"
     sign_target_files_apks -o -d $KEY_MAPPINGS \
-        "$OUT"/obj/PACKAGING/target_files_intermediates/aospa_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        aospa-$AOSPA_VERSION-signed-target_files-$FILE_NAME_TAG.zip
+        "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
+        rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip
 
     checkExit
 
     echo -e "${CLR_BLD_BLU}Generating signed install package${CLR_RST}"
     ota_from_target_files -k $KEY_MAPPINGS/releasekey \
         --block ${INCREMENTAL} \
-        aospa-$AOSPA_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-        aospa-$AOSPA_VERSION.zip
+        rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+        rvos-$RVOS_VERSION.zip
 
     checkExit
 
@@ -245,16 +245,16 @@ elif [ "${KEY_MAPPINGS}" ]; then
         fi
         ota_from_target_files -k $KEY_MAPPINGS/releasekey \
             --block --incremental_from $DELTA_TARGET_FILES \
-            aospa-$AOSPA_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-            aospa-$AOSPA_VERSION-delta.zip
+            rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+            rvos-$RVOS_VERSION-delta.zip
         checkExit
     fi
 
     if [ "$FLAG_IMG_ZIP" = 'y' ]; then
         echo -e "${CLR_BLD_BLU}Generating signed fastboot package${CLR_RST}"
         img_from_target_files \
-            aospa-$AOSPA_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-            aospa-$AOSPA_VERSION-image.zip
+            rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+            rvos-$RVOS_VERSION-image.zip
         checkExit
     fi
 # Build rom package
@@ -265,15 +265,15 @@ elif [ "$FLAG_IMG_ZIP" = 'y' ]; then
 
     echo -e "${CLR_BLD_BLU}Generating install package${CLR_RST}"
     ota_from_target_files \
-        "$OUT"/obj/PACKAGING/target_files_intermediates/aospa_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        aospa-$AOSPA_VERSION.zip
+        "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
+        rvos-$RVOS_VERSION.zip
 
     checkExit
 
     echo -e "${CLR_BLD_BLU}Generating fastboot package${CLR_RST}"
     img_from_target_files \
-        "$OUT"/obj/PACKAGING/target_files_intermediates/aospa_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        aospa-$AOSPA_VERSION-image.zip
+        "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
+        rvos-$RVOS_VERSION-image.zip
 
     checkExit
 
@@ -282,8 +282,8 @@ else
 
     checkExit
 
-    cp -f $OUT/aospa_$DEVICE-ota-$FILE_NAME_TAG.zip $OUT/aospa-$AOSPA_VERSION.zip
-    echo "Package Complete: $OUT/aospa-$AOSPA_VERSION.zip"
+    cp -f $OUT/rvos_$DEVICE-ota-$FILE_NAME_TAG.zip $OUT/rvos-$RVOS_VERSION.zip
+    echo "Package Complete: $OUT/rvos-$RVOS_VERSION.zip"
 fi
 echo -e ""
 

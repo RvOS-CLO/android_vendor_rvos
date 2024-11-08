@@ -14,8 +14,8 @@
 
 # Product Makefiles
 PRODUCT_MAKEFILES += \
-    $(LOCAL_DIR)/beryllium/aospa_beryllium.mk
+    $(LOCAL_DIR)/beryllium/rvos_beryllium.mk
 
 # Lunch targets
 COMMON_LUNCH_CHOICES += \
-    aospa_beryllium-userdebug \
+    rvos_beryllium-userdebug \
