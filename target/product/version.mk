@@ -21,6 +21,13 @@
 #     RVOS_BUILD_VARIANT
 #
 
+# RvOS Maintainer
+RVOS_MAINTAINER ?= Unknown
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.rvos.maintainer=$(RVOS_MAINTAINER)
+
+
 # This is the global RvOS version flavor that determines the focal point
 # behind our releases. This is bundled alongside $(RVOS_MINOR_VERSION)
 # and only changes per major Android releases.
