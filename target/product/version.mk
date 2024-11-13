@@ -81,3 +81,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rvos.version.major=$(shell V1=$(RVOS_MAJOR_VERSION); echo $${V1^}) \
     ro.rvos.version.minor=$(RVOS_MINOR_VERSION) \
     ro.rvos.build.variant=$(shell V2=$(RVOS_BUILD_VARIANT); echo $${V2^})
+
+# CodeLinaro Revision
+CODELINARO_REVISION := LA.QSSI.13.0.r1-14500-qssi.0
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.codelinaro.revision=$(CODELINARO_REVISION)
