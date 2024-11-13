@@ -25,6 +25,9 @@ $(call inherit-product, device/xiaomi/beryllium/device.mk)
 # Inherit from the AOSPA configuration.
 $(call inherit-product, vendor/aospa/target/product/aospa-target.mk)
 
+# RvOS
+RVOS_MAINTAINER := Rve
+
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := rvos_beryllium
 PRODUCT_BRAND := Xiaomi
