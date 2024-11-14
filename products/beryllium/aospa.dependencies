@@ -19,6 +19,12 @@
         "clone-depth":  "1"
     },
     {
+	"remote":	"rvos",
+	"repository":   "vendor_miuicamera_beryllium",
+	"target_path":  "vendor/miuicamera",
+	"revision":     "topaz"
+    },
+    {
         "remote":       "aospa",
         "repository":   "AOSPA/android_hardware_qcom_audio",
         "target_path":  "vendor/qcom/opensource/audio-hal/primary-hal",
