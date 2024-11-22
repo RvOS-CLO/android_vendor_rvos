@@ -23,9 +23,11 @@
 
 # RvOS Maintainer
 RVOS_MAINTAINER ?= Unknown
+RVOS_MAINTAINER_LINK ?= https://t.me/rvegroup
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.rvos.maintainer=$(RVOS_MAINTAINER)
+    ro.rvos.maintainer=$(RVOS_MAINTAINER) \
+    ro.rvos.maintainer.link=$(RVOS_MAINTAINER_LINK)
 
 
 # This is the global RvOS version flavor that determines the focal point
