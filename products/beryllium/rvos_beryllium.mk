@@ -27,6 +27,7 @@ $(call inherit-product, vendor/aospa/target/product/aospa-target.mk)
 
 # RvOS
 RVOS_MAINTAINER := Rve
+RVOS_MAINTAINER_LINK := https://t.me/rve270
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := rvos_beryllium
