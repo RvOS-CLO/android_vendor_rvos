@@ -86,5 +86,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 
 # CodeLinaro Revision
 CODELINARO_REVISION := LA.QSSI.13.0.r1-14500-qssi.0
+CODELINARO_REVISION_LINK := https://git.codelinaro.org/clo/la/la/system/manifest/-/blob/LA.QSSI.13.0.r1-14500-qssi.0/LA.QSSI.13.0.r1-14500-qssi.0.xml
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.codelinaro.revision=$(CODELINARO_REVISION)
+    ro.codelinaro.revision=$(CODELINARO_REVISION) \
+    ro.codelinaro.revision.link=$(CODELINARO_REVISION_LINK)
