@@ -30,6 +30,9 @@ endif
 PRODUCT_SYSTEM_PROPERTIES += \
     ro.config.media_vol_steps=30
 
+# Boot Animation
+$(call inherit-product, vendor/aospa/bootanimation/bootanimation.mk)
+
 # Camera
 PRODUCT_PACKAGES += \
     GoogleCameraGo
