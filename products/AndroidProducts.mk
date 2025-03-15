@@ -14,8 +14,10 @@
 
 # Product Makefiles
 PRODUCT_MAKEFILES += \
-    $(LOCAL_DIR)/beryllium/rvos_beryllium.mk
+    $(LOCAL_DIR)/beryllium/rvos_beryllium.mk \
+    $(LOCAL_DIR)/ginkgo/rvos_ginkgo.mk
 
 # Lunch targets
 COMMON_LUNCH_CHOICES += \
     rvos_beryllium-userdebug \
+    rvos_ginkgo-userdebug \
