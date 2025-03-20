@@ -29,6 +29,15 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rvos.maintainer=$(RVOS_MAINTAINER) \
     ro.rvos.maintainer.link=$(RVOS_MAINTAINER_LINK)
 
+# RvOS Flags
+RVOS_FRONT_CAM ?= unknown
+RVOS_REAR_CAM ?= unknown
+RVOS_PROCESSOR ?= unknown
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    persist.sys.device_camera_info_rear=$(RVOS_REAR_CAM) \
+    persist.sys.device_camera_info_front=$(RVOS_FRONT_CAM) \
+    ro.rvos.processor=$(RVOS_PROCESSOR)
 
 # This is the global RvOS version flavor that determines the focal point
 # behind our releases. This is bundled alongside $(RVOS_MINOR_VERSION)
