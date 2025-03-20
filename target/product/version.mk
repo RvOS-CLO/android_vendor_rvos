@@ -24,6 +24,7 @@
 # RvOS Maintainer
 RVOS_MAINTAINER ?= Unknown
 RVOS_MAINTAINER_LINK ?= https://t.me/rvegroup
+OFFICIAL_MAINTAINER = $(shell cat vendor/aospa/target/product/maintainer.mk | awk '{ print $$1 }')
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rvos.maintainer=$(RVOS_MAINTAINER) \
@@ -38,6 +39,23 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     persist.sys.device_camera_info_rear=$(RVOS_REAR_CAM) \
     persist.sys.device_camera_info_front=$(RVOS_FRONT_CAM) \
     ro.rvos.processor=$(RVOS_PROCESSOR)
+
+# Check Official Maintainer
+ifdef RVOS_MAINTAINER
+    ifeq ($(filter $(RVOS_MAINTAINER), $(OFFICIAL_MAINTAINER)), $(RVOS_MAINTAINER))
+        $(warning "$(RVOS_MAINTAINER) is verified as official RvOS maintainer, build as official build.")
+	PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+            ro.rvos.build.type=Official
+    else
+        $(warning "Unofficial maintainer detected, building as unofficial build.")
+	PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+            ro.rvos.build.type=Unofficial
+    endif
+else
+    $(warning "No maintainer name detected, building as unofficial build.")
+    PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+        ro.rvos.build.type=Unofficial
+endif
 
 # This is the global RvOS version flavor that determines the focal point
 # behind our releases. This is bundled alongside $(RVOS_MINOR_VERSION)
