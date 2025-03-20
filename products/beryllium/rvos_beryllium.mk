@@ -28,13 +28,16 @@ $(call inherit-product, vendor/aospa/target/product/aospa-target.mk)
 # RvOS
 RVOS_MAINTAINER := Rve
 RVOS_MAINTAINER_LINK := https://t.me/rve270
+RVOS_FRONT_CAM := 20
+RVOS_REAR_CAM := 12,5
+RVOS_PROCESSOR := Snapdragon_845
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := rvos_beryllium
 PRODUCT_BRAND := Xiaomi
 PRODUCT_DEVICE := beryllium
 PRODUCT_MANUFACTURER := Xiaomi
-PRODUCT_MODEL := Poco F1
+PRODUCT_MODEL := POCO F1
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
