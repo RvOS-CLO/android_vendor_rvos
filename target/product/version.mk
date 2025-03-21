@@ -85,7 +85,7 @@ ifdef RVOS_BUILDTYPE
       RVOS_BUILD_VARIANT := release
   endif
 else
-  RVOS_BUILD_VARIANT := unofficial
+  RVOS_BUILD_VARIANT := community
 endif
 
 # Build Date
