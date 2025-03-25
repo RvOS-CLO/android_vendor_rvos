@@ -36,7 +36,6 @@ function showHelpAndExit {
         echo -e "${CLR_BLD_BLU}  -c, --clean           Wipe the tree before building${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -i, --installclean    Dirty build - Use 'installclean'${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -r, --repo-sync       Sync before building${CLR_RST}"
-        echo -e "${CLR_BLD_BLU}  -v, --variant         RvOS variant - Can be alpha, beta or release${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -t, --build-type      Specify build type${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -j, --jobs            Specify jobs/threads to use${CLR_RST}"
         echo -e "${CLR_BLD_BLU}  -m, --module          Build a specific module${CLR_RST}"
@@ -63,7 +62,6 @@ while true; do
         -c|--clean|c|clean) FLAG_CLEAN_BUILD=y;;
         -i|--installclean|i|installclean) FLAG_INSTALLCLEAN_BUILD=y;;
         -r|--repo-sync|r|repo-sync) FLAG_SYNC=y;;
-        -v|--variant|v|variant) RVOS_VARIANT="$2"; shift;;
         -t|--build-type|t|build-type) BUILD_TYPE="$2"; shift;;
         -j|--jobs|j|jobs) JOBS="$2"; shift;;
         -m|--module|m|module) MODULES+=("$2"); echo $2; shift;;
@@ -102,20 +100,6 @@ if [ ! -d "$DIR_ROOT/vendor/aospa" ]; then
         exit 1
 fi
 
-# Setup RvOS variant if specified
-if [ $RVOS_VARIANT ]; then
-    RVOS_VARIANT=`echo $RVOS_VARIANT |  tr "[:upper:]" "[:lower:]"`
-    if [ "${RVOS_VARIANT}" = "release" ]; then
-        export RVOS_BUILDTYPE=RELEASE
-    elif [ "${RVOS_VARIANT}" = "beta" ]; then
-        export RVOS_BUILDTYPE=BETA
-    elif [ "${RVOS_VARIANT}" = "alpha" ]; then
-        export RVOS_BUILDTYPE=ALPHA
-    else
-        echo -e "${CLR_BLD_RED} Unknown RvOS variant - use beta or release${CLR_RST}"
-        exit 1
-    fi
-fi
 
 # Setup RvOS version if specified
 if [ $RVOS_USER_VERSION ]; then
@@ -225,15 +209,15 @@ elif [ "${KEY_MAPPINGS}" ]; then
     echo -e "${CLR_BLD_BLU}Signing target files apks${CLR_RST}"
     sign_target_files_apks -o -d $KEY_MAPPINGS \
         "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip
+        RvOS-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip
 
     checkExit
 
     echo -e "${CLR_BLD_BLU}Generating signed install package${CLR_RST}"
     ota_from_target_files -k $KEY_MAPPINGS/releasekey \
         --block ${INCREMENTAL} \
-        rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-        rvos-$RVOS_VERSION.zip
+        RvOS-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+        RvOS-$RVOS_VERSION.zip
 
     checkExit
 
@@ -245,16 +229,16 @@ elif [ "${KEY_MAPPINGS}" ]; then
         fi
         ota_from_target_files -k $KEY_MAPPINGS/releasekey \
             --block --incremental_from $DELTA_TARGET_FILES \
-            rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-            rvos-$RVOS_VERSION-delta.zip
+            RvOS-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+            RvOS-$RVOS_VERSION-delta.zip
         checkExit
     fi
 
     if [ "$FLAG_IMG_ZIP" = 'y' ]; then
         echo -e "${CLR_BLD_BLU}Generating signed fastboot package${CLR_RST}"
         img_from_target_files \
-            rvos-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
-            rvos-$RVOS_VERSION-image.zip
+            RvOS-$RVOS_VERSION-signed-target_files-$FILE_NAME_TAG.zip \
+            RvOS-$RVOS_VERSION-image.zip
         checkExit
     fi
 # Build rom package
@@ -266,14 +250,14 @@ elif [ "$FLAG_IMG_ZIP" = 'y' ]; then
     echo -e "${CLR_BLD_BLU}Generating install package${CLR_RST}"
     ota_from_target_files \
         "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        rvos-$RVOS_VERSION.zip
+        RvOS-$RVOS_VERSION.zip
 
     checkExit
 
     echo -e "${CLR_BLD_BLU}Generating fastboot package${CLR_RST}"
     img_from_target_files \
         "$OUT"/obj/PACKAGING/target_files_intermediates/rvos_$DEVICE-target_files-$FILE_NAME_TAG.zip \
-        rvos-$RVOS_VERSION-image.zip
+        RvOS-$RVOS_VERSION-image.zip
 
     checkExit
 
@@ -282,8 +266,8 @@ else
 
     checkExit
 
-    cp -f $OUT/rvos_$DEVICE-ota-$FILE_NAME_TAG.zip $OUT/rvos-$RVOS_VERSION.zip
-    echo "Package Complete: $OUT/rvos-$RVOS_VERSION.zip"
+    cp -f $OUT/rvos_$DEVICE-ota-$FILE_NAME_TAG.zip $OUT/RvOS-$RVOS_VERSION.zip
+    echo "Package Complete: $OUT/RvOS-$RVOS_VERSION.zip"
 fi
 echo -e ""
 

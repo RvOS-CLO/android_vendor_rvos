@@ -1,7 +1,7 @@
 # Copyright (C) 2022 Paranoid Android
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #      http://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,6 @@
 # Guarantees that the following are defined:
 #     RVOS_MAJOR_VERSION
 #     RVOS_MINOR_VERSION
-#     RVOS_BUILD_VARIANT
 #
 
 # RvOS Maintainer
@@ -28,7 +27,7 @@ OFFICIAL_MAINTAINER = $(shell cat vendor/aospa/target/product/maintainer.mk | aw
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rvos.maintainer=$(RVOS_MAINTAINER) \
-    ro.rvos.maintainer.link=$(RVOS_MAINTAINER_LINK)
+    ro.rvos.maintainer.link=$(RVOS_MAINTAINER_LINK) \
 
 # RvOS Flags
 RVOS_FRONT_CAM ?= unknown
@@ -41,26 +40,28 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.rvos.processor=$(RVOS_PROCESSOR)
 
 # Check Official Maintainer
+RVOS_BUILD_TYPE ?= Unofficial
+
 ifdef RVOS_MAINTAINER
     ifeq ($(filter $(RVOS_MAINTAINER), $(OFFICIAL_MAINTAINER)), $(RVOS_MAINTAINER))
         $(warning "$(RVOS_MAINTAINER) is verified as official RvOS maintainer, build as official build.")
-	PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-            ro.rvos.build.type=Official
+	RVOS_BUILD_TYPE := Official
     else
         $(warning "Unofficial maintainer detected, building as unofficial build.")
-	PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-            ro.rvos.build.type=Unofficial
+	RVOS_BUILD_TYPE := Unofficial
     endif
 else
     $(warning "No maintainer name detected, building as unofficial build.")
-    PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-        ro.rvos.build.type=Unofficial
+    RVOS_BUILD_TYPE := Unofficial
 endif
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+     ro.rvos.build.type=$(RVOS_BUILD_TYPE)
 
 # This is the global RvOS version flavor that determines the focal point
 # behind our releases. This is bundled alongside $(RVOS_MINOR_VERSION)
 # and only changes per major Android releases.
-RVOS_MAJOR_VERSION := tiramisu
+RVOS_MAJOR_VERSION := Tiramisu
 
 # The version code is the upgradable portion during the cycle of
 # every major Android release. Each version code upgrade indicates
@@ -71,45 +72,16 @@ else
     RVOS_MINOR_VERSION := 1
 endif
 
-# Build Variants
-#
-# Alpha: Development / Test releases
-# Beta: Public releases with CI
-# Release: Final Product | No Tagging
-ifdef RVOS_BUILDTYPE
-  ifeq ($(RVOS_BUILDTYPE), ALPHA)
-      RVOS_BUILD_VARIANT := alpha
-  else ifeq ($(RVOS_BUILDTYPE), BETA)
-      RVOS_BUILD_VARIANT := beta
-  else ifeq ($(RVOS_BUILDTYPE), RELEASE)
-      RVOS_BUILD_VARIANT := release
-  endif
-else
-  RVOS_BUILD_VARIANT := community
-endif
-
 # Build Date
 BUILD_DATE := $(shell date -u +%Y%m%d)
 
 # RvOS Version
-TMP_RVOS_VERSION := $(RVOS_MAJOR_VERSION)-
-ifeq ($(filter release,$(RVOS_BUILD_VARIANT)),)
-    TMP_RVOS_VERSION += $(RVOS_BUILD_VARIANT)-
-endif
-ifeq ($(filter unofficial,$(RVOS_BUILD_VARIANT)),)
-    TMP_RVOS_VERSION += $(RVOS_MINOR_VERSION)-
-endif
-TMP_RVOS_VERSION += $(RVOS_BUILD)-$(BUILD_DATE)
-RVOS_VERSION := $(shell echo $(TMP_RVOS_VERSION) | tr -d '[:space:]')
+RVOS_VERSION := $(RVOS_MAJOR_VERSION)-$(RVOS_BUILD_TYPE)-$(DEVICE)-$(BUILD_DATE)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.rvos.version=$(RVOS_VERSION)
-
-# The properties will be uppercase for parse by Settings, etc.
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.rvos.version=$(RVOS_VERSION) \
     ro.rvos.version.major=$(shell V1=$(RVOS_MAJOR_VERSION); echo $${V1^}) \
-    ro.rvos.version.minor=$(RVOS_MINOR_VERSION) \
-    ro.rvos.build.variant=$(shell V2=$(RVOS_BUILD_VARIANT); echo $${V2^})
+    ro.rvos.version.minor=$(RVOS_MINOR_VERSION)
 
 # CodeLinaro Revision
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \

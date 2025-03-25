@@ -18,7 +18,9 @@ $(call inherit-product, device/xiaomi/ginkgo/device.mk)
 
 # RvOS
 RVOS_MAINTAINER := Hirokixd
-RVOS_MAINTAINER_LINK := https://t.me/Hirokixd28
+RVOS_FRONT_CAM := 13
+RVOS_REAR_CAM := 48,8,2,2
+RVOS_PROCESSOR := Qualcomm®_Snapdragon™_665
 WITH_GMS := true
 
 PRODUCT_NAME := rvos_ginkgo
