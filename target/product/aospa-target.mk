@@ -30,6 +30,10 @@ PRODUCT_SYSTEM_PROPERTIES += \
 PRODUCT_PACKAGES += \
     GoogleCameraGo
 
+# GameSpace
+PRODUCT_PACKAGES += \
+     GameSpace
+
 # Charger
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
     ro.charger.enable_suspend=1
