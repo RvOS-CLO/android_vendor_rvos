@@ -85,4 +85,4 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 
 # CodeLinaro Revision
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.codelinaro.revision=LA.QSSI.13.0.r1-15500-qssi.0
+    ro.codelinaro.revision=LA.QSSI.13.0.r1-17000-qssi.0
